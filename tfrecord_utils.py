@@ -1,4 +1,3 @@
-# %% [code] {"execution":{"iopub.status.busy":"2024-08-13T01:22:00.798351Z","iopub.execute_input":"2024-08-13T01:22:00.798725Z","iopub.status.idle":"2024-08-13T01:22:18.839409Z","shell.execute_reply.started":"2024-08-13T01:22:00.798694Z","shell.execute_reply":"2024-08-13T01:22:18.838330Z"}}
 import tensorflow as tf
 import cv2
 import os
@@ -8,7 +7,6 @@ from tensorflow.train import BytesList, Int64List
 import concurrent.futures
 import threading 
 
-# %% [code] {"execution":{"iopub.status.busy":"2024-08-13T01:25:44.208342Z","iopub.execute_input":"2024-08-13T01:25:44.209019Z","iopub.status.idle":"2024-08-13T01:25:44.228401Z","shell.execute_reply.started":"2024-08-13T01:25:44.208978Z","shell.execute_reply":"2024-08-13T01:25:44.226683Z"}}
 def create_example(image, label):
     '''Returns example protobuf'''
     serialised_image = tf.io.serialize_tensor(image)
