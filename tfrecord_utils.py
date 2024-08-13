@@ -30,24 +30,15 @@ def helper_func(parent_dir, filename, label):
     return create_example(img, label)
 
 
-def write_tfrecord(parent_dir, idx, filename, file_count, n_shards, writers, label, writer_lock):   
+def write_tfrecord(parent_dir, idx, filename, n_shards, writers, label, writer_lock):   
     example = helper_func(parent_dir, filename, label)
     # Determine shard
     shard = idx % n_shards
     with writer_lock[shard]:
         writers[shard].write(example.SerializeToString())
-#         file_count[0] += 1
-#         print(f'\rProgress:{file_count[0]} of {len(os.listdir(parent_dir))}', end='', flush=True)        
-        
-#         if file_count[0]%10 == 0:
-#         with threading.Lock():
-#     print(f'\rProgress:{file_count[0]} of {len(os.listdir(parent_dir))} \t{(file_count[0]*100/len(os.listdir(parent_dir))):.2f}% complete', end='', flush=True)
 
 
 def write_as_tfrecord(parent_dir, tfrecord_filename, label, n_shards=10, max_workers=3000):
-    file_count = [0]
-    count = [0]
-    
     filenames = os.listdir(parent_dir)
     pad = len(str(n_shards))
     paths = [f'{tfrecord_filename}.tfrecord-{index+1:0{pad}d}-of-{n_shards:0{pad}d}' for index in range(n_shards)]        
@@ -55,9 +46,10 @@ def write_as_tfrecord(parent_dir, tfrecord_filename, label, n_shards=10, max_wor
 
     with ExitStack() as stack:
         writers = [stack.enter_context(tf.io.TFRecordWriter(path)) for path in paths]
+        
         try:
             with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-                futures = [executor.submit(write_tfrecord, parent_dir, idx, filename, file_count, n_shards,writers,
+                futures = [executor.submit(write_tfrecord, parent_dir, idx, filename, n_shards,writers,
                                            label, writer_lock) for idx, filename in enumerate(filenames)]
                 
                 for _ in tqdm(concurrent.futures.as_completed(futures), total=len(futures), desc="Writing TFRecords"):
