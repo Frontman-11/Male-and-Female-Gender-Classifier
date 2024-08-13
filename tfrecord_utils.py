@@ -7,6 +7,7 @@ from tensorflow.train import BytesList, Int64List
 import concurrent.futures
 import threading 
 
+
 def create_example(image, label):
     '''Returns example protobuf'''
     serialised_image = tf.io.serialize_tensor(image)
