@@ -6,6 +6,7 @@ from tensorflow.train import Feature, Features, Example
 from tensorflow.train import BytesList, Int64List
 import concurrent.futures
 import threading 
+import tqdm
 
 
 def create_example(image, label):
@@ -27,7 +28,6 @@ def helper_func(parent_dir, filename, label):
     img = cv2.imread(filepath, flags=1)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     return create_example(img, label)
-
 
 
 def write_tfrecord(parent_dir, idx, filename, file_count, n_shards, writers, label):   
@@ -56,17 +56,19 @@ def write_as_tfrecord(parent_dir, tfrecord_filename, label, n_shards=10, max_wor
     with ExitStack() as stack:
         writers = [stack.enter_context(tf.io.TFRecordWriter(path)) for path in paths]
         try:
-            if __name__ == '__main__':        
-                with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-                    futures = [executor.submit(write_tfrecord, parent_dir, idx, filename, file_count, n_shards,writers,
-                                               label, writer_lock) for idx, filename in enumerate(filenames)]
-                    for future in concurrent.futures.as_completed(futures):
-                        future.result()                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-            else:
-                raise ValueError('Name not equal to __main__')
+            with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+                futures = [executor.submit(write_tfrecord, parent_dir, idx, filename, file_count, n_shards,writers,
+                                           label, writer_lock) for idx, filename in enumerate(filenames)]
                 
+                for _ in tqdm(concurrent.futures.as_completed(futures), total=len(futures), desc="Writing TFRecords"):
+                    pass
+                
+                for future in concurrent.futures.as_completed(futures):
+                    future.result()  
+                    
         except tf.errors.ResourceExhaustedError as e:
             print('\nProgram stopped due to limited storage space')
             return e
+        
     print('done writing')
     return paths
