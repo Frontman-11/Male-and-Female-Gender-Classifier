@@ -30,8 +30,8 @@ def helper_func(parent_dir, filename, label):
     return create_example(img, label)
 
 
-def write_tfrecord(parent_dir, idx, filename, file_count, n_shards, writers, label):   
-    example = helper_func(parent_dir, filename, label, writer_lock)
+def write_tfrecord(parent_dir, idx, filename, file_count, n_shards, writers, label, writer_lock):   
+    example = helper_func(parent_dir, filename, label)
     # Determine shard
     shard = idx % n_shards
     with writer_lock[shard]:
