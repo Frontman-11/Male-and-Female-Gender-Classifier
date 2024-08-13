@@ -69,4 +69,5 @@ def write_as_tfrecord(parent_dir, tfrecord_filename, label, n_shards=10, max_wor
         except ResourceExhaustedError as e:
             print('\nProgram stopped due to limited storage space')
             return e
-    print('done writing')   
+    print('done writing')
+    return paths
