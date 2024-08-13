@@ -1,9 +1,8 @@
-# %% [code] {"jupyter":{"outputs_hidden":false},"execution":{"iopub.status.busy":"2024-08-13T01:10:35.041848Z","iopub.execute_input":"2024-08-13T01:10:35.042283Z","iopub.status.idle":"2024-08-13T01:10:35.047993Z","shell.execute_reply.started":"2024-08-13T01:10:35.042252Z","shell.execute_reply":"2024-08-13T01:10:35.046701Z"}}
 import tensorflow as tf
 from tensorflow.train import Feature, Features, Example
 from tensorflow.train import BytesList, Int64List
 
-# %% [code] {"jupyter":{"outputs_hidden":false},"execution":{"iopub.status.busy":"2024-08-13T00:52:12.341284Z","iopub.execute_input":"2024-08-13T00:52:12.342457Z","iopub.status.idle":"2024-08-13T00:52:12.353347Z","shell.execute_reply.started":"2024-08-13T00:52:12.342417Z","shell.execute_reply":"2024-08-13T00:52:12.352233Z"}}
+
 def parse_example(serialised_example):
     feature = {
         'images': tf.io.FixedLenFeature(shape=[], dtype=tf.string),
