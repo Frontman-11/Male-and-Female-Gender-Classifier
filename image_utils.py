@@ -1,1 +1,56 @@
-{"metadata":{"kernelspec":{"language":"python","display_name":"Python 3","name":"python3"},"language_info":{"name":"python","version":"3.10.13","mimetype":"text/x-python","codemirror_mode":{"name":"ipython","version":3},"pygments_lexer":"ipython3","nbconvert_exporter":"python","file_extension":".py"},"kaggle":{"accelerator":"none","dataSources":[],"dockerImageVersionId":30746,"isInternetEnabled":true,"language":"python","sourceType":"script","isGpuEnabled":false}},"nbformat_minor":4,"nbformat":4,"cells":[{"cell_type":"code","source":"import matplotlib.pyplot as plt\nimport cv2\n\ndef crop_square_resize(img, size=None, interpolation=cv2.INTER_AREA):\n    if not size:\n        print('image not cropped nor resized')\n        return img\n    h, w = img.shape[:2]\n    min_size = np.amin([h,w])\n    crop_img = img[int(h/2-min_size/2):int(h/2+min_size/2), int(w/2-min_size/2):int(w/2+min_size/2)]\n    resized = cv2.resize(crop_img, (size, size), interpolation=interpolation)\n    return resized\n\n\ndef read_plot_image(image_path, size=None, **kwargs):    \n    flags = kwargs.get('flags', 1)\n    image = cv2.imread(image_path, flags=flags)\n    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)\n    image = crop_square_resize(image, size)\n    plt.imshow(image)\n    plt.axis('off')\n    plt.title(f'size: {image.shape}', loc='left')\n    plt.show()\n    \n    \ndef plot_wrong_pred(dataset, y_true, preds, subplot_row_col=(20, 20), figsize=(40, 40), fname=None, take=-1):\n    wrong_pred_idx = preds==y_true\n    count = 0\n    figure, axes = plt.subplots(subplot_row_col[0], subplot_row_col[1], figsize=figsize)\n    axes = list(axes.flatten())\n    ax_gen = iter(axes)\n    n_title = 0\n    \n    for images, labels in dataset.take(take):\n        for image, label in zip(images, labels):\n            if not wrong_pred_idx[count]:\n                try:\n                    ax = next(ax_gen)\n                    ax.imshow(image)\n                    ax.axis('off')\n                    n_title += 1\n                    ax.set_title(f'{n_title}: MALE' if label.numpy()==1 else f'{n_title}: FEMALE')\n                except StopIteration:\n                    print('Out of axis')\n                    break\n            count += 1\n    while True:\n        try:\n            ax = next(ax_gen)\n            ax.axis('off')\n        except StopIteration:\n            break\n            \n    plt.tight_layout()\n    plt.savefig(fname, dpi=300, format='png')\n    plt.close()","metadata":{"_uuid":"292051c5-4cdf-4f0d-820a-c330e20b1567","_cell_guid":"0926c4de-7271-4e06-9c41-44d110f83752","collapsed":false,"jupyter":{"outputs_hidden":false},"trusted":true},"execution_count":8,"outputs":[]}]}
+import matplotlib.pyplot as plt
+import cv2
+
+def crop_square_resize(img, size=None, interpolation=cv2.INTER_AREA):
+    if not size:
+        print('image not cropped nor resized')
+        return img
+    h, w = img.shape[:2]
+    min_size = np.amin([h,w])
+    crop_img = img[int(h/2-min_size/2):int(h/2+min_size/2), int(w/2-min_size/2):int(w/2+min_size/2)]
+    resized = cv2.resize(crop_img, (size, size), interpolation=interpolation)
+    return resized
+
+
+def read_plot_image(image_path, size=None, **kwargs):    
+    flags = kwargs.get('flags', 1)
+    image = cv2.imread(image_path, flags=flags)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = crop_square_resize(image, size)
+    plt.imshow(image)
+    plt.axis('off')
+    plt.title(f'size: {image.shape}', loc='left')
+    plt.show()
+    
+    
+def plot_wrong_pred(dataset, y_true, preds, subplot_row_col=(20, 20), figsize=(40, 40), fname=None, take=-1):
+    wrong_pred_idx = preds==y_true
+    count = 0
+    figure, axes = plt.subplots(subplot_row_col[0], subplot_row_col[1], figsize=figsize)
+    axes = list(axes.flatten())
+    ax_gen = iter(axes)
+    n_title = 0
+    
+    for images, labels in dataset.take(take):
+        for image, label in zip(images, labels):
+            if not wrong_pred_idx[count]:
+                try:
+                    ax = next(ax_gen)
+                    ax.imshow(image)
+                    ax.axis('off')
+                    n_title += 1
+                    ax.set_title(f'{n_title}: MALE' if label.numpy()==1 else f'{n_title}: FEMALE')
+                except StopIteration:
+                    print('Out of axis')
+                    break
+            count += 1
+    while True:
+        try:
+            ax = next(ax_gen)
+            ax.axis('off')
+        except StopIteration:
+            break
+            
+    plt.tight_layout()
+    plt.savefig(fname, dpi=300, format='png')
+    plt.close()
