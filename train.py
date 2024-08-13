@@ -4,13 +4,17 @@ def train_model(model,
                 epochs,
                 optimiser,
                 loss,
+                callbacks=None,
                 retrieve_weights_from=None,
                 save_weights_to=None,
                 use_saved_weights=True,
                 with_aug_layer=True,
-                callbacks=None):
+                aug_layer_name=None,
+                insert_dropout=None,
+                save_model_to=None):
     """
-    Trains the model with optional loading and saving of weights, and dynamic adjustment of learning rates based on augmentation.
+    Trains the model with optional loading and saving of weights, dynamic adjustment of the model based on augmentation layers, 
+    and the possibility to insert dropout layers. Optionally, the trained model can be saved.
 
     Args:
         model (tf.keras.Model): The Keras model to be trained.
@@ -19,11 +23,14 @@ def train_model(model,
         epochs (int): Number of epochs to train the model.
         optimiser (tf.keras.optimizers.Optimizer): Optimizer to be used for training the model.
         loss (str or tf.keras.losses.Loss): Loss function to be used for training.
+        callbacks (dict, optional): Dictionary of Keras callbacks. Keys should be callback class names, and values should be callback instances.
         retrieve_weights_from (str, optional): Path to the weights file to load from before training. Defaults to None.
         save_weights_to (str, optional): Path to save the model weights after training. Defaults to None.
         use_saved_weights (bool, optional): Whether to load weights from `retrieve_weights_from`. Defaults to True.
-        with_aug_layer (bool, optional): Whether to adjust learning rate based on augmentation. Defaults to True.
-        callbacks (dict, optional): Dictionary of Keras callbacks. Keys should be callback class names, and values should be callback instances.
+        with_aug_layer (bool, optional): Whether to adjust model based on the presence of an augmentation layer. Defaults to True.
+        aug_layer_name (str, optional): Name of the augmentation layer to identify and remove if `with_aug_layer` is False. Defaults to None.
+        insert_dropout (tf.keras.layers.Layer, optional): Dropout layer to be inserted before the final layer if augmentation is removed. Defaults to None.
+        save_model_to (str, optional): Path to save the entire model after training. Defaults to None.
 
     Returns:
         tf.keras.callbacks.History: The training history object.
@@ -40,9 +47,6 @@ def train_model(model,
         best_val_accuracy = 0
 
     # Adjust callback parameters if present
-    if 'EarlyStopping' in cb_keys:
-        callbacks['EarlyStopping'].patience = epochs // 4
-    
     if 'ModelCheckpoint' in cb_keys:
         callbacks['ModelCheckpoint'].initial_value_threshold = best_val_accuracy
         callbacks['ModelCheckpoint'].filepath = save_weights_to
@@ -50,10 +54,15 @@ def train_model(model,
     # Adjust learning rate based on with_aug_layer parameter
     if with_aug_layer:
         print(f'Training with with_aug_layer={with_aug_layer}')
-        optimiser.learning_rate = 0.01
+        
     else:
         print(f'Training with with_aug_layer={with_aug_layer}')
-        optimiser.learning_rate = 0.001
+        if model.layers[0].name == 'augmentation_layer' or model.layers[0].name == aug_layer_name:
+            layers = model.layers[1:]
+            if insert_dropout:
+                index = layers.index(layers[-1])
+                layers.insert(index, insert_dropout)
+            model = tf.keras.Sequential(layers=layers, name='final_gender_clf_model')
 
     model.compile(
         loss=loss,
@@ -70,5 +79,11 @@ def train_model(model,
         shuffle=True,
         validation_freq=1,
     )
+    
+    if save_model_to:
+        try:
+            model.save(save_model_to)
+        except Exception as e:
+            print(f"Error saving model: {e}")
 
     return history
