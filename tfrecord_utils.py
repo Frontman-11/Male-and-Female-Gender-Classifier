@@ -6,7 +6,7 @@ from tensorflow.train import Feature, Features, Example
 from tensorflow.train import BytesList, Int64List
 import concurrent.futures
 import threading 
-import tqdm
+from tqdm import tqdm
 
 
 def create_example(image, label):
