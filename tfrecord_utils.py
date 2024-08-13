@@ -44,7 +44,6 @@ def write_tfrecord(parent_dir, idx, filename, file_count, n_shards, writers, lab
 #     print(f'\rProgress:{file_count[0]} of {len(os.listdir(parent_dir))} \t{(file_count[0]*100/len(os.listdir(parent_dir))):.2f}% complete', end='', flush=True)
 
 
-
 def write_as_tfrecord(parent_dir, tfrecord_filename, label, n_shards=10, max_workers=3000):
     file_count = [0]
     count = [0]
@@ -66,7 +65,7 @@ def write_as_tfrecord(parent_dir, tfrecord_filename, label, n_shards=10, max_wor
             else:
                 raise ValueError('Name not equal to __main__')
                 
-        except ResourceExhaustedError as e:
+        except tf.errors.ResourceExhaustedError as e:
             print('\nProgram stopped due to limited storage space')
             return e
     print('done writing')
