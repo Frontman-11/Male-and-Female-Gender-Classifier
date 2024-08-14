@@ -1,4 +1,4 @@
-# %% [code] {"jupyter":{"outputs_hidden":false},"execution":{"iopub.status.busy":"2024-08-13T00:42:25.645337Z","iopub.execute_input":"2024-08-13T00:42:25.645766Z","iopub.status.idle":"2024-08-13T00:42:25.653973Z","shell.execute_reply.started":"2024-08-13T00:42:25.645735Z","shell.execute_reply":"2024-08-13T00:42:25.652425Z"}}
+# %% [code] {"jupyter":{"outputs_hidden":false},"execution":{"iopub.status.busy":"2024-08-14T17:51:14.242848Z","iopub.execute_input":"2024-08-14T17:51:14.243796Z","iopub.status.idle":"2024-08-14T17:51:14.254463Z","shell.execute_reply.started":"2024-08-14T17:51:14.243746Z","shell.execute_reply":"2024-08-14T17:51:14.252907Z"}}
 import tensorflow as tf
 
 
@@ -11,3 +11,17 @@ def return_pred_and_label(dataset, count=-1):
         predictions = tf.concat([predictions, y_pred], -1)
         y_true = tf.concat([y_true, label], -1)
     return {'y_true':y_true, 'y_pred':predictions}
+
+
+def init_weights(model, 
+                 dataset=None, 
+                 retrieve_weights_from:str=None,
+                 return_evaluation:bool=False):
+    
+    model.load_weights(retrieve_weights_from)
+    
+    if return_evaluation and dataset:
+        evaluation = model.evaluate(dataset, return_dict=True)
+        return model, evaluation 
+    else:
+        return model
