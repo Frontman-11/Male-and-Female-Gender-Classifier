@@ -1,3 +1,4 @@
+# %% [code]
 # %% [code] {"execution":{"iopub.status.busy":"2024-08-10T21:34:16.015862Z","iopub.execute_input":"2024-08-10T21:34:16.016768Z","iopub.status.idle":"2024-08-10T21:34:30.581333Z","shell.execute_reply.started":"2024-08-10T21:34:16.016725Z","shell.execute_reply":"2024-08-10T21:34:30.580151Z"},"jupyter":{"outputs_hidden":false}}
 import tensorflow as tf
 
@@ -6,6 +7,13 @@ class AugmentationLayer(tf.keras.layers.Layer):
     def __init__(self, augmentation_model, **kwargs):
         super(AugmentationLayer, self).__init__(**kwargs)
         self.augmentation_model=augmentation_model
+    
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "augmentation_model": self.augmentation_model
+        })
+        return config
     
     def build(self, input_shape):
         pass
