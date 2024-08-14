@@ -10,7 +10,9 @@ def train_model(model,
                 with_aug_layer=True,
                 aug_layer_name=None,
                 insert_dropout=None,
-                save_model_to=None):
+                save_model_to=None,
+                **kwargs
+               ):
     """
     Trains the model with optional loading and saving of weights, dynamic adjustment of the model based on augmentation layers, 
     and the possibility to insert dropout layers. Optionally, the trained model can be saved.
@@ -29,6 +31,7 @@ def train_model(model,
         aug_layer_name (str, optional): Name of the augmentation layer to identify and remove if `with_aug_layer` is False. Defaults to None.
         insert_dropout (tf.keras.layers.Layer, optional): Dropout layer to be inserted before the final layer if augmentation is removed. Defaults to None.
         save_model_to (str, optional): Path to save the entire model after training. Defaults to None.
+        kwargs: passed to model fit method.
 
     Returns:
         tf.keras.callbacks.History: The training history object.
@@ -79,6 +82,7 @@ def train_model(model,
         validation_data=valid_set,
         shuffle=True,
         validation_freq=1,
+        **kwargs
     )
     
     if save_model_to:
