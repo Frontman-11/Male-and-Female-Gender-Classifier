@@ -30,7 +30,7 @@ def create_augmentation_model():
         tf.keras.layers.RandomTranslation(height_factor=(-0.05, 0.05), width_factor=(-0.05, 0.05)),
         tf.keras.layers.RandomBrightness(0.5),
         tf.keras.layers.Lambda(lambda x: x/255.0)
-    ], name='augmentation_layer')
+    ])
     return AugmentationLayer(augmentation_model)
 
  
@@ -46,7 +46,7 @@ def create_model(
     model = tf.keras.Sequential(
     layers= [
         tf.keras.layers.Input(shape=input_shape, name='human_face'),
-        create_augmentation_model(),
+        create_augmentation_model(name='augmentation_layer'),
         tf.keras.layers.Conv2D(filters=filters, kernel_size=(5,5), padding=padding, kernel_initializer=kernel_initializer, use_bias=use_bias, name='cov2d_1'),
         tf.keras.layers.BatchNormalization(name='batchnorm_1'),
         tf.keras.layers.Activation(tf.keras.activations.swish,  name='swish_activation_1'),
@@ -73,5 +73,5 @@ def create_model(
         tf.keras.layers.BatchNormalization(name='batchnorm_5'),
         tf.keras.layers.Activation(tf.keras.activations.swish, name='swish_activation_5'),
         tf.keras.layers.Dense(1, activation='sigmoid', name='sigmoid_output')
-    ])
+    ], name='Gender_clf_model')
     return model
