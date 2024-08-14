@@ -7,7 +7,6 @@ def train_model(model,
                 callbacks=None,
                 retrieve_weights_from=None,
                 save_weights_to=None,
-                use_saved_weights=True,
                 with_aug_layer=True,
                 aug_layer_name=None,
                 insert_dropout=None,
@@ -26,7 +25,6 @@ def train_model(model,
         callbacks (dict, optional): Dictionary of Keras callbacks. Keys should be callback class names, and values should be callback instances.
         retrieve_weights_from (str, optional): Path to the weights file to load from before training. Defaults to None.
         save_weights_to (str, optional): Path to save the model weights after training. Defaults to None.
-        use_saved_weights (bool, optional): Whether to load weights from `retrieve_weights_from`. Defaults to True.
         with_aug_layer (bool, optional): Whether to adjust model based on the presence of an augmentation layer. Defaults to True.
         aug_layer_name (str, optional): Name of the augmentation layer to identify and remove if `with_aug_layer` is False. Defaults to None.
         insert_dropout (tf.keras.layers.Layer, optional): Dropout layer to be inserted before the final layer if augmentation is removed. Defaults to None.
@@ -40,8 +38,13 @@ def train_model(model,
     cb_keys = callbacks.keys()
 
     # Load weights if specified
-    if use_saved_weights and retrieve_weights_from:
+    if retrieve_weights_from:
         model.load_weights(retrieve_weights_from)
+        model.compile(
+        loss=loss,
+        optimizer=optimiser,
+        metrics=['accuracy']
+        )
         best_val_accuracy = model.evaluate(valid_set, return_dict=True)['accuracy']
     else:
         best_val_accuracy = 0
@@ -52,11 +55,9 @@ def train_model(model,
         callbacks['ModelCheckpoint'].filepath = save_weights_to
     
     # Adjust learning rate based on with_aug_layer parameter
-    if with_aug_layer:
-        print(f'Training with with_aug_layer={with_aug_layer}')
-        
-    else:
-        print(f'Training with with_aug_layer={with_aug_layer}')
+    print(f'Training with with_aug_layer={with_aug_layer}')
+    
+    if not with_aug_layer:
         if model.layers[0].name == 'augmentation_layer' or model.layers[0].name == aug_layer_name:
             layers = model.layers[1:]
             if insert_dropout:
