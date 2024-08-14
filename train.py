@@ -51,6 +51,7 @@ def train_model(model,
         )
         
         best_val_accuracy = model.evaluate(valid_set, return_dict=True)['accuracy']
+        print(f'Model loaded weights with best_val_accuracy: {best_val_accuracy}')
         
     else:
         best_val_accuracy = 0
