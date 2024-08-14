@@ -43,12 +43,15 @@ def train_model(model,
     # Load weights if specified
     if retrieve_weights_from:
         model.load_weights(retrieve_weights_from)
+        
         model.compile(
         loss=loss,
         optimizer=optimiser,
         metrics=['accuracy']
         )
+        
         best_val_accuracy = model.evaluate(valid_set, return_dict=True)['accuracy']
+        
     else:
         best_val_accuracy = 0
 
