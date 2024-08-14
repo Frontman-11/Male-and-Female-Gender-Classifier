@@ -3,7 +3,7 @@ import tensorflow as tf
 class AugmentationLayer(tf.keras.layers.Layer):
     def __init__(self, augmentation_model, **kwargs):
         super(AugmentationLayer, self).__init__(**kwargs)
-        self.augmentation_model=augmentation_model
+        self.augmentation_model = augmentation_model
     
     def get_config(self):
         config = super().get_config()
@@ -20,9 +20,7 @@ class AugmentationLayer(tf.keras.layers.Layer):
             return self.augmentation_model(x, training=training)
         return x
         
-        
-    
-def create_augmentation_model():
+def create_augmentation_model(name=None):
     augmentation_model = tf.keras.Sequential([
         tf.keras.layers.RandomFlip("horizontal"),
         tf.keras.layers.RandomRotation(0.1),
@@ -30,21 +28,20 @@ def create_augmentation_model():
         tf.keras.layers.RandomTranslation(height_factor=(-0.05, 0.05), width_factor=(-0.05, 0.05)),
         tf.keras.layers.RandomBrightness(0.5),
         tf.keras.layers.Lambda(lambda x: x/255.0)
-    ])
-    return AugmentationLayer(augmentation_model)
-
- 
+    ], name=name)
+    
+    return AugmentationLayer(augmentation_model, name=name)
 
 def create_model(
-    filters = 32,
-    kernel_size= (3,3),
-    kernel_initializer = 'he_normal', 
-    use_bias = False,
-    padding = 'same',
-    input_shape = (218, 178, 3)):
+    filters=32,
+    kernel_size=(3,3),
+    kernel_initializer='he_normal', 
+    use_bias=False,
+    padding='same',
+    input_shape=(218, 178, 3)):
     
     model = tf.keras.Sequential(
-    layers= [
+    layers=[
         tf.keras.layers.Input(shape=input_shape, name='human_face'),
         create_augmentation_model(name='augmentation_layer'),
         tf.keras.layers.Conv2D(filters=filters, kernel_size=(5,5), padding=padding, kernel_initializer=kernel_initializer, use_bias=use_bias, name='cov2d_1'),
