@@ -1,5 +1,5 @@
-# %% [code]
-# %% [code]
+import tensorflow as tf
+
 def train_model(model,
                 X_train,
                 valid_set,
@@ -29,6 +29,7 @@ def train_model(model,
         aug_layer_name (str, optional): Name of the augmentation layer to identify and remove if `with_aug_layer` is False. Defaults to None.
         insert_dropout (tf.keras.layers.Layer, optional): Dropout layer to be inserted before the final layer if augmentation is removed. Defaults to None.
         save_model_to (str, optional): Path to save the entire model after training. Defaults to None.
+        show_model_summary: whether to show the model summary
         kwargs: passed to model fit method.
 
     Returns:
@@ -49,7 +50,7 @@ def train_model(model,
             model = tf.keras.Sequential(layers=layers, name='final_gender_clf_model')
             
     if show_model_summary:
-        print(model.summary)
+        print(model.summary())
 
     model.compile(
         **params
