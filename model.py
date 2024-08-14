@@ -1,8 +1,5 @@
-# %% [code]
-# %% [code] {"execution":{"iopub.status.busy":"2024-08-10T21:34:16.015862Z","iopub.execute_input":"2024-08-10T21:34:16.016768Z","iopub.status.idle":"2024-08-10T21:34:30.581333Z","shell.execute_reply.started":"2024-08-10T21:34:16.016725Z","shell.execute_reply":"2024-08-10T21:34:30.580151Z"},"jupyter":{"outputs_hidden":false}}
 import tensorflow as tf
 
-# %% [code] {"execution":{"iopub.status.busy":"2024-08-10T21:36:00.302626Z","iopub.execute_input":"2024-08-10T21:36:00.303635Z","iopub.status.idle":"2024-08-10T21:36:00.320744Z","shell.execute_reply.started":"2024-08-10T21:36:00.303595Z","shell.execute_reply":"2024-08-10T21:36:00.319618Z"},"jupyter":{"outputs_hidden":false}}
 class AugmentationLayer(tf.keras.layers.Layer):
     def __init__(self, augmentation_model, **kwargs):
         super(AugmentationLayer, self).__init__(**kwargs)
@@ -33,7 +30,7 @@ def create_augmentation_model():
         tf.keras.layers.RandomTranslation(height_factor=(-0.05, 0.05), width_factor=(-0.05, 0.05)),
         tf.keras.layers.RandomBrightness(0.5),
         tf.keras.layers.Lambda(lambda x: x/255.0)
-    ])
+    ], name='augmentation_layer')
     return AugmentationLayer(augmentation_model)
 
  
