@@ -14,14 +14,16 @@ def return_pred_and_label(dataset, count=-1):
 
 
 def init_weights(model, 
-                 dataset=None, 
+                 dataset=None,
+                 params=None,
                  retrieve_weights_from:str=None,
                  return_evaluation:bool=False):
     
     model.load_weights(retrieve_weights_from)
     
-    if return_evaluation and dataset:
+    if return_evaluation and dataset and params:
+        model.compile(**params)
         evaluation = model.evaluate(dataset, return_dict=True)
         return model, evaluation 
     else:
-        return model
+        return model, None
