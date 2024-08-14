@@ -1,4 +1,5 @@
 # %% [code]
+# %% [code]
 def train_model(model,
                 X_train,
                 valid_set,
@@ -9,6 +10,7 @@ def train_model(model,
                 aug_layer_name=None,
                 insert_dropout=None,
                 save_model_to=None,
+                show_model_summary=False,
                 **kwargs
                ):
     """
@@ -45,6 +47,9 @@ def train_model(model,
                 index = layers.index(layers[-1])
                 layers.insert(index, insert_dropout)
             model = tf.keras.Sequential(layers=layers, name='final_gender_clf_model')
+            
+    if show_model_summary:
+        print(model.summary)
 
     model.compile(
         **params
