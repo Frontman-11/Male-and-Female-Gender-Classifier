@@ -3,8 +3,7 @@ def train_model(model,
                 X_train,
                 valid_set,
                 epochs,
-                optimiser,
-                loss,
+                params=None,
                 callbacks=None,
                 with_aug_layer=True,
                 aug_layer_name=None,
@@ -48,9 +47,7 @@ def train_model(model,
             model = tf.keras.Sequential(layers=layers, name='final_gender_clf_model')
 
     model.compile(
-        loss=loss,
-        optimizer=optimiser,
-        metrics=['accuracy']
+        **params
     )
 
     history = model.fit(
