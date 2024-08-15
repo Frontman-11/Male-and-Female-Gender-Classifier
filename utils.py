@@ -20,7 +20,7 @@ def stack_filepaths(paths:list, max_length=None):
     for i in range(length):
         for path in paths:
             try:
-                filepaths.extend([paths[i]])
+                filepaths.extend([path[i]])
             except IndexError:
                 continue
     return filepaths
