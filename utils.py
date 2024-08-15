@@ -2,15 +2,28 @@
 import tensorflow as tf
 
 
-def return_pred_and_label(dataset, count=-1):
+def return_pred_and_label(dataset, model=None, count=-1):
     predictions = tf.constant([], dtype=tf.int64)
     y_true = tf.constant([], dtype=tf.int64)
 
-    for image, label in dataset.take(count, model=None):
+    for image, label in dataset.take(count):
         y_pred = tf.cast((model.predict(image, verbose=0) >= 0.5).reshape(-1), dtype=tf.int64)
         predictions = tf.concat([predictions, y_pred], -1)
         y_true = tf.concat([y_true, label], -1)
     return {'y_true':y_true, 'y_pred':predictions}
+
+
+def stack_filepaths(paths:list, max_length=None):
+    length = max_length or max(len(path) for path in paths)
+        
+    filepaths = []
+    for i in range(length):
+        for path in paths:
+            try:
+                filepaths.extend([paths[i]])
+            except IndexError:
+                continue
+    return filepaths
 
 
 def init_weights(model, 
