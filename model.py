@@ -40,6 +40,21 @@ def create_model(
     padding='same',
     input_shape=(218, 178, 3)):
     
+    """
+    Constructs a CNN model with augmentation and multiple convolutional layers.
+
+    Args:
+        filters (int, optional): Number of filters in the first convolutional layer. Default is 32.
+        kernel_size (tuple, optional): Size of the convolutional kernels. Default is (3, 3).
+        kernel_initializer (str, optional): Kernel initializer. Default is 'he_normal'.
+        use_bias (bool, optional): Whether to use bias in convolutional and dense layers. Default is False.
+        padding (str, optional): Padding for convolutional layers. Default is 'same'.
+        input_shape (tuple, optional): Shape of the input images. Default is (218, 178, 3).
+
+    Returns:
+        tf.keras.Model: The constructed Keras model.
+    """
+    
     model = tf.keras.Sequential(
     layers=[
         tf.keras.layers.Input(shape=input_shape, name='human_face'),
@@ -72,3 +87,31 @@ def create_model(
         tf.keras.layers.Dense(1, activation='sigmoid', name='sigmoid_output')
     ], name='Gender_clf_model')
     return model
+
+
+def init_weights(model, 
+                 retrieve_weights_from: str,
+                 dataset=None,
+                 params=None,
+                 return_evaluation: bool = False):
+    """
+    Load weights into a model and optionally evaluate it on a dataset.
+
+    Args:
+        model (tf.keras.Model): Model to load weights into.
+        retrieve_weights_from (str): Path to weight file. Defaults to None.
+        dataset (tf.data.Dataset, optional): Dataset for evaluation. Defaults to None.
+        params (dict, optional): Parameters for model.compile(). Defaults to None.
+        return_evaluation (bool, optional): Whether to return evaluation results. Defaults to False.
+
+    Returns:
+        tuple: Model and optionally evaluation results.
+    """
+    model.load_weights(retrieve_weights_from)
+    
+    if return_evaluation and dataset and params:
+        model.compile(**params)
+        evaluation = model.evaluate(dataset, return_dict=True)
+        return model, evaluation 
+    else:
+        return model, None
