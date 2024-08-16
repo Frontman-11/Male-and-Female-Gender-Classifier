@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import cv2
-import numpy as np
+
 
 def crop_square_resize(img, size=None, interpolation=cv2.INTER_AREA):
     """
@@ -18,7 +18,7 @@ def crop_square_resize(img, size=None, interpolation=cv2.INTER_AREA):
         print('Image not cropped nor resized')
         return img
     h, w = img.shape[:2]
-    min_size = np.amin([h, w])
+    min_size = min([h, w])
     crop_img = img[int(h / 2 - min_size / 2):int(h / 2 + min_size / 2), int(w / 2 - min_size / 2):int(w / 2 + min_size / 2)]
     resized = cv2.resize(crop_img, (size, size), interpolation=interpolation)
     return resized
