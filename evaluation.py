@@ -20,13 +20,13 @@ def evaluate_model(model, dataset):
     return result
 
     
-def return_pred_and_label(dataset, model, count=-1):
+def return_pred_and_label(model, dataset, count=-1):
     """
     Generate predictions and true labels from a dataset using a model.
 
     Args:
-        dataset (tf.data.Dataset): Dataset containing images and labels.
         model (tf.keras.Model): Trained model for predictions. Defaults to None.
+        dataset (tf.data.Dataset): Dataset containing images and labels.
         count (int, optional): Number of batches to process. Defaults to -1 (process all).
 
     Returns:
