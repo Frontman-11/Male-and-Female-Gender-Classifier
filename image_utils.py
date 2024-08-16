@@ -80,6 +80,8 @@ def plot_wrong_pred(dataset,
     
     for images, labels in dataset.take(take):
         for image, label in zip(images, labels):
+            if count >= len(wrong_pred_idx):
+                break
             if wrong_pred_idx[count]:
                 try:
                     ax = next(ax_gen)
