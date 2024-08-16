@@ -43,7 +43,8 @@ def return_pred_and_label(model, dataset, count=-1):
 
 
 def generate_classification_report(model, dataset):
-    print(classification_report(return_pred_and_label(model, dataset).values()))
+    y_true, y_pred = return_pred_and_label(model, dataset).values()
+    print(classification_report(y_true, y_pred))
     
     
 def plot_confusion_matrix(model, dataset, figsize=(10, 7)):
