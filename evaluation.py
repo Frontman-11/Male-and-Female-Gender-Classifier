@@ -42,9 +42,9 @@ def return_pred_and_label(model, dataset, count=-1):
     return {'y_true': y_true, 'y_pred': predictions}
 
 
-def generate_classification_report(model, dataset):
+def generate_classification_report(model, dataset, digits=4):
     y_true, y_pred = return_pred_and_label(model, dataset).values()
-    print(classification_report(y_true, y_pred))
+    print(classification_report(y_true, y_pred, digits=digits))
     
     
 def plot_confusion_matrix(model, dataset, figsize=(10, 7)):
