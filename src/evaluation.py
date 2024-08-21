@@ -1,7 +1,5 @@
-# %% [code]
 import tensorflow as tf
-import numpy as np
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.metrics import classification_report, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
 
