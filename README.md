@@ -55,7 +55,7 @@ This project was developed on Kaggle but can be set up locally as well. To set i
      - Set `with_aug_layer` to `True` to apply random augmentation (note that normalization will also be applied, which is why `normalize` must be set to `False` for the training set).  
      - Set `insert_dropout` to `None`.  
      - Optionally change `save_model_to` and `show_model_summary` from their default values.  
-     - This model should achieve at least 98.18% accuracy.
+     - This model should achieve at least 98.18% accuracy on the validation set.
 
    **Stage 2: Final Training**  
    - For the training set (obtained from `preprocess.gender_dataset`):  
@@ -70,14 +70,14 @@ This project was developed on Kaggle but can be set up locally as well. To set i
      - Set `with_aug_layer` to `False`.  
      - Set `insert_dropout` to `tf.keras.layers.Dropout(rate=0.3, name='dropout_layer_2')`.  
      - Optionally change `save_model_to` and `show_model_summary` from their default values.
-   - Ensure you rerun the script for the second stage to make sure the last trained weights are correctly updated before beginning training.
+   - Ensure you rerun the script for the second stage to make sure the last trained weights are correctly updated before beginning training. At this stage the model should be able to get to 98.46 accuracy on the validation set which is the final model used in this project.
 
 3. **Evaluation:**  
-   - Run `evaluation_notebook.ipynb` to evaluate the model. Due to the size of the generated picture grid, it's recommended to save the picture to the output directory for analysis rather than displaying it directly in the notebook.
+   - Run `evaluation_notebook.ipynb` to evaluate the model. Due to the size of the generated picture grid, it's recommended to save the picture to the output directory for analysis rather than displaying it directly in the notebook. Checkout [wrong prediction grid](./output/wrong_preds.md) for the wrong prediction grid of the final model on all three datasets.
 
 ## Model Details
 
-This model is a custom-built Convolutional Neural Network (CNN) designed from scratch, not a fine-tuned version of any existing model. It follows a sequential architecture with stacked layers, including convolutional layers, batch normalization, activation functions, and max pooling. The model concludes with two dense layers for classification. For more details on the architecture, [click here](link_to_model_architecture_image).
+This model is a custom-built Convolutional Neural Network (CNN) designed from scratch, not a fine-tuned version of any existing model. It follows a sequential architecture with stacked layers, including convolutional layers, batch normalization, activation functions, and max pooling. The model concludes with two dense layers for classification. For more details and diagram on the architecture, [click here](./output/model_1.keras.png).
 
 ## Repository Structure
 
