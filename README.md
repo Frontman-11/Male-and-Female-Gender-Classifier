@@ -8,6 +8,8 @@ The aim of this project is to accurately classify images into male and female ge
 - [Installation](#installation)
 - [Usage](#usage)
 - [Model Details](#model-details)
+- [Result](#result)
+- [Data Quality Notice: Mislabeled Classes](#data-quality-notice:-mislabeled-classes)
 - [Repository Structure](#repository-structure)
 - [License](#license)
 
@@ -78,6 +80,19 @@ This project was developed on Kaggle but can be set up locally as well. To set i
 ## Model Details
 
 This model is a custom-built Convolutional Neural Network (CNN) designed from scratch, not a fine-tuned version of any existing model. It follows a sequential architecture with stacked layers, including convolutional layers, batch normalization, activation functions, and max pooling. The model concludes with two dense layers for classification. For more details and diagram on the architecture, [click here](./output/model_1.keras.png).
+
+## Result
+The [model](./models/final_model.md) achieves a very high `classification report` on the dataset. see [evaluation notebook](./notebook/evaluation_notebook.ipynb) for more details.
+
+## Data Quality Notice: Mislabeled Classes
+
+### Impact on Model Performance
+
+The dataset used in this project contains mislabeled instances across the train, validation, and test sets, where some males are incorrectly labeled as females, and vice versa. Despite achieving a high accuracy of 98.66% on the test set and 98.46% on the validation set, the model's performance has been impacted by these mislabeled classes. Notably, the model correctly classified some of these mislabeled instances according to their true gender, but this accuracy was penalized by the incorrect labels provided in the dataset. This can be particularly seen in the [output section](./output/wrong_preds.md)
+
+### Future Improvements
+
+Given the impact of these mislabeled classes, future model updates will focus on training with a cleaner dataset. The current model will also be used to help correct the mislabeled instances in the dataset. Specifically, to leverage the MC Dropout method with the current model to classify the VGGFace2 dataset by directories into the two genders then retrain on the dataset after human inspection. This process will contribute to enhancing the model's accuracy in future iterations.
 
 ## Repository Structure
 
