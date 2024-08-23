@@ -41,7 +41,8 @@ This project was developed on Kaggle but can be set up locally as well. To set i
    - Run the `tfrecord_writing.ipynb` notebook to convert the raw dataset into TFRecord format, which will be saved to the `data/processed` directory.  
    - Make sure to edit the file paths in the `config.py` module to accurately reflect your directories. Alternatively, download the processed dataset from [this link](https://www.kaggle.com/work/collections/14474385) on Kaggle if you don't want to convert the dataset yourself.
 
-2. **Training the Model:**  
+2. **Training the Model:**
+   Run the `train_notebook.ipynb` following the stages below.
    - The training process consists of two stages: initial training and final training.
 
    **Stage 1: Initial Training**  
@@ -74,7 +75,7 @@ This project was developed on Kaggle but can be set up locally as well. To set i
      - Optionally change `save_model_to` and `show_model_summary` from their default values.
    - Ensure you rerun the script for the second stage to make sure the last trained weights are correctly updated before beginning training. At this stage the model should be able to get to 98.46 accuracy on the validation set which is the final model used in this project.
 
-3. **Evaluation:**  
+4. **Evaluation:**  
    - Run `evaluation_notebook.ipynb` to evaluate the model. Due to the size of the generated picture grid, it's recommended to save the picture to the output directory for analysis rather than displaying it directly in the notebook. Checkout [wrong prediction grid](./output/wrong_preds.md) for the wrong prediction grid of the final model on all three datasets.
 
 ## Model Details
