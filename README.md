@@ -42,6 +42,7 @@ This project was developed on Kaggle but can be set up locally as well. To set i
    - Make sure to edit the file paths in the `config.py` module to accurately reflect your directories. Alternatively, download the processed dataset from [this link](https://www.kaggle.com/work/collections/14474385) on Kaggle if you don't want to convert the dataset yourself.
 
 2. **Training the Model:**
+   
    Run the `train_notebook.ipynb` following the stages below.
    - The training process consists of two stages: initial training and final training.
 
@@ -87,11 +88,11 @@ The [model](./models/final_model.md) achieves a very high `classification report
 
 ## Data Quality Notice: Mislabeled Classes
 
-### Impact on Model Performance
+**Impact on Model Performance**
 
 The dataset used in this project contains mislabeled instances across the train, validation, and test sets, where some males are incorrectly labeled as females, and vice versa. Despite achieving a high accuracy of 98.66% on the test set and 98.46% on the validation set, the model's performance has been impacted by these mislabeled classes. Notably, the model correctly classified some of these mislabeled instances according to their true gender, but this accuracy was penalized by the incorrect labels provided in the dataset. This can be particularly seen in the [output section](./output/wrong_preds.md)
 
-### Future Improvements
+**Future Improvements**
 
 Given the impact of these mislabeled classes, future model updates will focus on training with a cleaner dataset. The current model will also be used to help correct the mislabeled instances in the dataset. Specifically, to leverage the MC Dropout method with the current model to classify the VGGFace2 dataset by directories into the two genders then retrain on the dataset after human inspection. This process will contribute to enhancing the model's accuracy in future iterations.
 
