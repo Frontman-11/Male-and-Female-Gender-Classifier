@@ -76,4 +76,4 @@ def train_model(model,
         except Exception as e:
             print(f"Error saving model: {e}")
 
-    return history
+    return model, history
