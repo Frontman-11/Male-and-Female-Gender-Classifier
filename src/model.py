@@ -38,6 +38,7 @@ def create_model(
     kernel_initializer='he_normal', 
     use_bias=False,
     padding='same',
+    units=512,
     input_shape=(218, 178, 3)):
     
     """
@@ -81,7 +82,7 @@ def create_model(
 
         tf.keras.layers.Flatten(name='flatten_layer_1'),
         tf.keras.layers.Dropout(rate=0.3, name='dropout_layer_1'),
-        tf.keras.layers.Dense(units=512, use_bias=use_bias, name='dense_layer_1'),
+        tf.keras.layers.Dense(units=units, use_bias=use_bias, name='dense_layer_1'),
         tf.keras.layers.BatchNormalization(name='batchnorm_5'),
         tf.keras.layers.Activation(tf.keras.activations.swish, name='swish_activation_5'),
         tf.keras.layers.Dense(1, activation='sigmoid', name='sigmoid_output')
